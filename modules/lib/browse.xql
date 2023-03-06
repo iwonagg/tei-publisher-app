@@ -217,16 +217,30 @@ declare function app:dispatch-action($node as node(), $model as map(*), $action 
                         }
                     else
                         <p>Document not found: {$path}</p>
+            
+            let $i18n := '{"count": ' || count($docs) - count($result) || '}'
+
             return
                 <div id="action-alert" class="alert alert-success">
-                    <p>Removed {count($docs) - count($result)} documents.</p>
+                    <p>
+                     Removed {count($docs) - count($result)} documents
+                        <pb-i18n key="delete.document" options="{$i18n}">
+                            Removed {count($docs) - count($result)} documents
+                        </pb-i18n>.
+                    </p>
                     { $result }
                 </div>
         case "delete-odd" return
             let $docs := request:get-parameter("docs[]", ())
+            let $i18n := '{"count": ' || count($docs)  || '}'
+
             return
                 <div id="action-alert" class="alert alert-success">
-                    <p>Removed {count($docs)} documents.</p>
+                    <p>
+                        <pb-i18n key="delete.document" options="{$i18n}">
+                            Removed ({count($docs)}) documents
+                        </pb-i18n>.
+                    </p>
                     {
                         for $path in $docs
                         let $doc := doc($config:odd-root || "/" || $path)
